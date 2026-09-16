@@ -1,0 +1,30 @@
+{
+  "schedule": [
+    {
+      "id": "demo-1",
+      "subject": "Toán nâng cao",
+      "day": "Thứ Hai",
+      "start": "07:30",
+      "room": "A204",
+      "lecturer": "Cô Lan"
+    },
+    {
+      "id": "demo-2",
+      "subject": "Tiếng Anh",
+      "day": "Thứ Tư",
+      "start": "14:00",
+      "room": "B102",
+      "lecturer": "Thầy Minh"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "demo-task-1",
+      "title": "Bài tập chương 3",
+      "subject": "Toán nâng cao",
+      "due_date": "2099-12-31",
+      "priority": "Quan trọng",
+      "completed": false
+    }
+  ]
+}

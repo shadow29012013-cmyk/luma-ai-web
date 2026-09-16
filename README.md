@@ -1,11 +1,32 @@
-# Luma AI Web
+# StudySync Web
 
-Ứng dụng web học tập cá nhân gồm Home, Product và Chat với AI. Project dùng kiến trúc 3 tầng đơn giản:
+Ứng dụng quản lý học tập cá nhân dành cho học sinh, sinh viên. StudySync tập trung vào lịch học, deadline, nhắc việc và tiến độ học tập.
+
+## Tính năng
+
+- **Dashboard:** lịch học sắp tới, deadline trong 7 ngày, tỷ lệ hoàn thành và biểu đồ tiến độ.
+- **Thời khóa biểu:** thêm môn học, ngày, giờ, phòng học và giảng viên.
+- **Bài tập & Deadline:** thêm bài tập theo môn, hạn nộp, mức độ `Gấp`, `Quan trọng`, `Bình thường`, đánh dấu hoàn thành.
+- **Nhắc việc thông minh:** Dashboard cảnh báo các bài chưa hoàn thành trong 7 ngày tới. Đây là lớp nhắc việc hiện tại; push notification trình duyệt có thể bổ sung khi chuyển sang backend có scheduler.
+- **Chat với AI:** hỏi cách học, lập kế hoạch hoặc chia nhỏ bài tập.
+
+## User flow
+
+1. Mở StudySync và xem Dashboard.
+2. Vào **Thời khóa biểu**, nhập lịch học thủ công.
+3. Vào **Bài tập & Deadline**, gắn bài tập với môn và chọn ưu tiên.
+4. Mỗi lần mở Dashboard, xem cảnh báo deadline trong 7 ngày.
+5. Đánh dấu bài đã hoàn thành để cập nhật biểu đồ tiến độ.
 
 - `web_app.py`: giao diện Streamlit.
-- `bus/chat_bus.py`: điều phối nghiệp vụ.
+- `bus/study_bus.py`, `bus/chat_bus.py`: nghiệp vụ lịch học, bài tập và AI.
+- `database/study_repository.py`: lưu lịch/bài tập trong `data/study_data.json`.
 - `database/chat_repository.py`: lưu hội thoại trong `data/messages.json`.
 - `model/ai_model.py`: kết nối API tương thích OpenAI.
+
+## UI/UX và kiến trúc
+
+Giao diện dùng phong cách Modern Minimalist, nền sáng, điểm nhấn xanh mint/cam và sidebar điều hướng. Dashboard ưu tiên ba thông tin cần quét nhanh: lịch học sắp tới, bài sắp đến hạn và tiến độ tuần. Dữ liệu local dùng JSON để dễ học và chạy nhẹ; khi triển khai lớn có thể chuyển repository sang SQLite hoặc PostgreSQL.
 
 ## Chạy trên máy
 
