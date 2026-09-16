@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from urllib import request
+from urllib.error import HTTPError, URLError
 
 from dotenv import load_dotenv
 
@@ -34,7 +35,10 @@ class AIModel:
 
     @property
     def is_configured(self) -> bool:
-        return bool(self.api_key)
+        return bool(self.api_key) and self.api_key not in {
+            "PASTE_A_NEW_KEY_HERE",
+            "your_api_key_here",
+        }
 
     def reply(self, messages: list[dict[str, str]]) -> str:
         if not self.is_configured:
@@ -69,5 +73,14 @@ class AIModel:
             with request.urlopen(api_request, timeout=45) as response:
                 result = json.loads(response.read().decode("utf-8"))
             return result["choices"][0]["message"]["content"].strip()
-        except Exception as error:
-            return f"StudySync chưa nhận được phản hồi từ AI ({type(error).__name__}). Kiểm tra API key và Secrets rồi thử lại."
+        except HTTPError as error:
+            try:
+                detail = error.read().decode("utf-8", errors="replace")
+                provider_message = json.loads(detail).get("error", {}).get("message", detail)
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                provider_message = "Nhà cung cấp không trả về chi tiết lỗi."
+            return f"StudySync chưa nhận được phản hồi từ AI (HTTP {error.code}). {provider_message}"
+        except URLError as error:
+            return f"StudySync không kết nối được tới AI: {error.reason}."
+        except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+            return f"StudySync nhận dữ liệu AI không đúng định dạng ({type(error).__name__})."
