@@ -36,7 +36,15 @@ class StudyRepository:
     def get_schedule(self) -> list[dict[str, Any]]:
         return self._read()["schedule"]
 
-    def add_schedule(self, subject: str, day: str, start: str, room: str, lecturer: str) -> dict[str, Any]:
+    def add_schedule(
+        self,
+        subject: str,
+        day: str,
+        start: str,
+        room: str,
+        lecturer: str,
+        reminder_minutes: int,
+    ) -> dict[str, Any]:
         data = self._read()
         item = {
             "id": datetime.now().strftime("lesson-%Y%m%d%H%M%S%f"),
@@ -45,6 +53,7 @@ class StudyRepository:
             "start": start,
             "room": room,
             "lecturer": lecturer,
+            "reminder_minutes": reminder_minutes,
         }
         data["schedule"].append(item)
         self._write(data)

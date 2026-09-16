@@ -17,10 +17,39 @@ class StudyBus:
     def assignments(self) -> list[dict[str, str | bool]]:
         return self.repository.get_assignments()
 
-    def add_schedule(self, subject: str, day: str, start: str, room: str, lecturer: str) -> None:
+    def add_schedule(
+        self,
+        subject: str,
+        day: str,
+        start: str,
+        room: str,
+        lecturer: str,
+        reminder_minutes: int,
+    ) -> None:
         if not subject.strip():
             raise ValueError("Tên môn học không được để trống.")
-        self.repository.add_schedule(subject.strip(), day, start, room.strip(), lecturer.strip())
+        self.repository.add_schedule(
+            subject.strip(), day, start, room.strip(), lecturer.strip(), reminder_minutes
+        )
+
+    def notifications(self) -> list[dict[str, str]]:
+        alerts = []
+        for lesson in self.schedule():
+            reminder = lesson.get("reminder_minutes", 30)
+            alerts.append(
+                {
+                    "title": f"Nhắc lịch: {lesson['subject']}",
+                    "detail": f"{lesson['day']} lúc {lesson['start']} · Phòng {lesson['room']} · nhắc trước {reminder} phút",
+                }
+            )
+        for task in self.due_soon():
+            alerts.append(
+                {
+                    "title": f"Deadline: {task['title']}",
+                    "detail": f"{task['subject']} · hạn {task['due_date']} · ưu tiên {task['priority']}",
+                }
+            )
+        return alerts
 
     def add_assignment(self, title: str, subject: str, due_date: date, priority: str) -> None:
         if not title.strip() or not subject.strip():
