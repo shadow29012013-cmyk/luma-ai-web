@@ -16,7 +16,8 @@ def _setting(name: str, default: str = "") -> str:
     try:
         import streamlit as st
 
-        return str(st.secrets.get(name, default)).strip()
+        secret_value = st.secrets.get(name, default)
+        return str(secret_value).strip()
     except Exception:
         return default
 
@@ -68,5 +69,5 @@ class AIModel:
             with request.urlopen(api_request, timeout=45) as response:
                 result = json.loads(response.read().decode("utf-8"))
             return result["choices"][0]["message"]["content"].strip()
-        except Exception:
-            return "AI hiện chưa phản hồi được. Bạn thử lại sau một chút nhé."
+        except Exception as error:
+            return f"StudySync chưa nhận được phản hồi từ AI ({type(error).__name__}). Kiểm tra API key và Secrets rồi thử lại."
